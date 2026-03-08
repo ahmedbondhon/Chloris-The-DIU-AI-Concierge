@@ -31,7 +31,7 @@ def send_booking_confirmation(to_email: str, user_name: str, resource: str, time
     # If no email password is set, we just print it to the console.
     if not SMTP_USER or not SMTP_PASSWORD:
         print("\n" + "="*30)
-        print(f"📧 [MOCK EMAIL] To: {to_email}")
+        print(f" [MOCK EMAIL] To: {to_email}")
         print(f"Subject: {subject}")
         print(body)
         print("="*30 + "\n")

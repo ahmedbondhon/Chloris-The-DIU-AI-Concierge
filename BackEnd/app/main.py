@@ -31,10 +31,10 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     print("--------------------------------")
-    print("🚀  Chloris Backend Starting...")
-    print("📂  Checking database tables...")
+    print("  Chloris Backend Starting...")
+    print("  Checking database tables...")
     init_db()
-    print("✅  Database is ready!")
+    print("  Database is ready!")
     print("--------------------------------")
 
 # 4. Connect the Routes (Chat, Auth, Bookings)

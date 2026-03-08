@@ -1,7 +1,7 @@
 from typing import Optional, List, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 
-# 👇 Add this block so VS Code knows what "Booking" and "Ticket" are
+#  Add this block so VS Code knows what "Booking" and "Ticket" are
 if TYPE_CHECKING:
     from .booking import Booking
     from .ticket import Ticket
@@ -18,5 +18,5 @@ class User(SQLModel, table=True):
     # Relationships
     bookings: List["Booking"] = Relationship(back_populates="user")
     
-    # 👇 FIXED: Changed "Tiket" to "Ticket"
+    #  FIXED: Changed "Tiket" to "Ticket"
     tickets: List["Ticket"] = Relationship(back_populates="user")
