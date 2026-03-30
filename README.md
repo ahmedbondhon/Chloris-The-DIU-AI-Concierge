@@ -57,3 +57,53 @@ chloris-frontend/
 │   └── main.tsx            # React Entry Point
 ├── package.json
 └── tailwind.config.js
+
+
+
+
+Getting Started
+Prerequisites
+Node.js (v18+)
+
+Python (3.10+)
+
+1. Frontend Setup
+Clone the repository and install the dependencies:
+
+Bash
+git clone [https://github.com/yourusername/chloris-ai-concierge.git](https://github.com/yourusername/chloris-ai-concierge.git)
+cd chloris-ai-concierge
+npm install
+Start the development server:
+
+Bash
+npm run dev
+The frontend will run on http://localhost:5173.
+
+2. Backend Setup (FastAPI)
+Navigate to your backend directory, activate your virtual environment, and start the server:
+
+Windows:
+
+Bash
+python -m venv venv
+.\venv\Scripts\activate
+pip install fastapi uvicorn
+uvicorn main:app --reload
+Mac/Linux:
+
+Bash
+python3 -m venv venv
+source venv/bin/activate
+pip install fastapi uvicorn
+uvicorn main:app --reload
+The backend API will run on http://127.0.0.1:8000.
+
+🛠️ Tech Stack Details
+Routing: react-router-dom (v6)
+
+Icons: lucide-react
+
+HTTP Client: axios
+
+Styling: tailwindcss
