@@ -5,55 +5,54 @@ interface ChatBubbleProps {
   message: string;
   isUser: boolean;
   timestamp?: string;
-  isTyping?: boolean; // If true, shows the "..." animation
+  isTyping?: boolean;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ 
-  message, 
-  isUser, 
+const ChatBubble: React.FC<ChatBubbleProps> = ({
+  message,
+  isUser,
   timestamp,
-  isTyping 
+  isTyping
 }) => {
   return (
-    <div className={`flex w-full mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
-      
-      {/* Bot Icon (Only show on left) */}
+    <div className={`flex w-full mb-6 ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-${isUser ? 'right' : 'left'}-4 duration-500`}>
+      {/* Bot Icon */}
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-2 flex-shrink-0">
-          <Bot size={18} className="text-blue-600" />
+        <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center mr-4 flex-shrink-0 shadow-lg shadow-indigo-500/10 border border-white/5">
+          <Bot size={22} className="text-white" />
         </div>
       )}
 
       {/* The Bubble */}
       <div className={`
-        max-w-[80%] p-3 rounded-2xl shadow-sm text-sm leading-relaxed
-        ${isUser 
-          ? 'bg-blue-600 text-white rounded-br-none' 
-          : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none'
+        max-w-[85%] lg:max-w-[75%] p-5 rounded-[2.5rem] text-[15px] leading-relaxed relative
+        ${isUser
+          ? 'bg-indigo-600 text-white rounded-tr-none shadow-xl shadow-indigo-600/20'
+          : 'bg-slate-800/60 backdrop-blur-xl text-slate-100 rounded-tl-none border border-white/5'
         }
       `}>
         {isTyping ? (
-          <div className="flex space-x-1 h-5 items-center">
-            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+          <div className="flex space-x-2 h-6 items-center px-1">
+            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap">{message}</p>
+          <p className="whitespace-pre-wrap font-medium tracking-tight">{message}</p>
         )}
-        
+
         {/* Timestamp */}
         {timestamp && (
-          <span className={`text-[10px] mt-1 block opacity-70 ${isUser ? 'text-blue-100' : 'text-slate-400'}`}>
+          <span className={`text-[9px] mt-2 block font-black uppercase tracking-[0.2em] opacity-40 ${isUser ? 'text-indigo-100' : 'text-slate-400'}`}>
             {timestamp}
           </span>
         )}
       </div>
 
-      {/* User Icon (Only show on right) */}
+      {/* User Icon */}
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center ml-2 flex-shrink-0">
-          <User size={18} className="text-slate-600" />
+        <div className="w-10 h-10 rounded-2xl bg-slate-800 border border-white/5 flex items-center justify-center ml-4 flex-shrink-0 shadow-sm">
+          <User size={22} className="text-indigo-400" />
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 1. Create the connection instance
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1', // Points to your FastAPI Backend
+  baseURL: 'http://localhost:8000/api/v1/', // Points to your FastAPI Backend
   headers: {
     'Content-Type': 'application/json',
   },

@@ -6,26 +6,22 @@ import MainLayout from './components/layout/MainLayout';
 
 // --- Pages ---
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ChatAssistant from './pages/ChatAssistant';
 import RoomBooking from './pages/RoomBooking';
+import Profile from './pages/Profile';
+import ForgotPassword from './pages/ForgotPassword';
 
 // --- The Security Guard ---
 // This component checks if you have a "Ticket" (Token).
 // If yes -> Show the page.
 // If no -> Kick you to Login.
+// --- The Security Guard (TEMPORARILY BYPASSED for development) ---
+// This component previously checked for authentication.
+// For now, it just shows the page directly.
 const ProtectedRoute = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-slate-50">
-    
-      </div>
-    );
-  }
-
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  return <Outlet />;
 };
 
 function App() {
@@ -33,24 +29,27 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* 🟢 PUBLIC ROUTES (No Sidebar, No Protection) */}
+          {/* 🟢 PUBLIC ROUTES */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* 🔒 PROTECTED ROUTES (Requires Login) */}
+          {/* 🔒 PROTECTED ROUTES (BYPASSED) */}
           <Route element={<ProtectedRoute />}>
-            
+
             {/* 🎨 MAIN LAYOUT (Adds Sidebar & Navbar to all these pages) */}
             <Route element={<MainLayout />}>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/chat" element={<ChatAssistant />} />
               <Route path="/bookings" element={<RoomBooking />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
-            
+
           </Route>
 
-          {/* 🛑 CATCH ALL (Redirect unknown URLs to Login) */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* 🛑 CATCH ALL (Redirect unknown URLs to Dashboard) */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
