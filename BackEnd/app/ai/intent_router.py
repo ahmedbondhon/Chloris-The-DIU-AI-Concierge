@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 from core.config import settings
 from ai.prompts import (
     INTENT_CLASSIFICATION_PROMPT,
@@ -6,24 +6,51 @@ from ai.prompts import (
 )
 from ai.rag_engine import ask_chloris_rag
 
-genai.configure(api_key=settings.GOOGLE_API_KEY)
-classifier_model = genai.GenerativeModel("gemini-1.5-flash")
+client           = genai.Client(api_key=settings.GOOGLE_API_KEY)
+GENERATION_MODEL = "gemini-1.5-flash"
 
 
 async def route_question(question: str, user_id: int = None) -> dict:
-    """
-    Step 1 — Classify the question as DATA or POLICY.
-    Step 2 — Route to the correct handler.
-    Step 3 — Return a unified response dict.
+    try:
+        classification_prompt = INTENT_CLASSIFICATION_PROMPT.format(
+            question=question
+        )
+        classification = client.models.generate_content(
+            model    = GENERATION_MODEL,
+            contents = classification_prompt,
+        )
+        intent = classification.text.strip().upper()
 
-    Response format:
-    {
-        "answer":       str,
-        "sources":      list[str],
-        "intent":       "DATA" | "POLICY",
-        "chunks_found": int,
-    }
-    """
+        if intent not in ("DATA", "POLICY"):
+            intent = "POLICY"
+
+        print(f"  [Intent Router] '{question[:50]}' → {intent}")
+
+        if intent == "DATA":
+            return await _handle_data_question(question, user_id)
+        else:
+            return _handle_policy_question(question)
+
+    except Exception as e:
+        print(f"Intent Router Error: {e}")
+        return {
+            "answer":       FALLBACK_RESPONSE,
+            "sources":      [],
+            "intent":       "ERROR",
+            "chunks_found": 0,
+        }
+
+
+def _handle_policy_question(question: str) -> dict:
+    result = ask_chloris_rag(question)
+    result["intent"] = "POLICY"
+    return result
+
+
+async def _handle_data_question(question: str, user_id: int = None) -> dict:
+    result = ask_chloris_rag(question)
+    result["intent"] = "DATA"
+    return result
     try:
         # ── Step 1: Classify intent ───────────────────────────────────────────
         classification_prompt = INTENT_CLASSIFICATION_PROMPT.format(
