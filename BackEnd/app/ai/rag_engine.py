@@ -21,7 +21,7 @@ collection    = chroma_client.get_or_create_collection(
 
 # ── Model names ───────────────────────────────────────────────────────────────
 GENERATION_MODEL = "gemini-2.0-flash"
-EMBEDDING_MODEL  = "text-embedding-004"
+EMBEDDING_MODEL  = "gemini-embedding-001"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
