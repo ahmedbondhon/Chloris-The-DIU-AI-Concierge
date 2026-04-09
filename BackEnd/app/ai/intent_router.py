@@ -7,7 +7,7 @@ from ai.prompts import (
 from ai.rag_engine import ask_chloris_rag
 
 client           = genai.Client(api_key=settings.GOOGLE_API_KEY)
-GENERATION_MODEL = "gemini-1.5-flash"
+GENERATION_MODEL = "gemini-2.0-flash"
 
 
 async def route_question(question: str, user_id: int = None) -> dict:
