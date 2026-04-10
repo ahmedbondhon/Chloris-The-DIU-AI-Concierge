@@ -11,7 +11,7 @@ const MainLayout = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex min-h-screen mesh-gradient font-outfit">
+    <div className="flex min-h-screen bg-white retro-grid font-outfit">
       {/* Sidebar - Pass state and close function */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
