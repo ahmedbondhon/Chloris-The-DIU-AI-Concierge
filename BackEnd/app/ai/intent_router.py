@@ -1,29 +1,52 @@
-from google import genai
 from core.config import settings
-from ai.prompts import (
-    INTENT_CLASSIFICATION_PROMPT,
-    FALLBACK_RESPONSE,
-)
+from ai.prompts import FALLBACK_RESPONSE
 from ai.rag_engine import ask_chloris_rag
 
-client           = genai.Client(api_key=settings.GOOGLE_API_KEY)
-GENERATION_MODEL = "gemini-2.0-flash"
+# ── Keyword-based intent classifier ──────────────────────────────────────────
+# Uses zero API calls — instant, free, reliable for common questions
+DATA_KEYWORDS = [
+    "my cgpa", "my gpa", "my grade", "my result", "my marks",
+    "my schedule", "my routine", "my class", "my course",
+    "my attendance", "my fee", "my payment", "my registration",
+    "my profile", "my semester", "my transcript", "my id",
+    "how much do i owe", "have i paid", "am i registered",
+    "show me my", "what is my", "check my",
+]
+
+POLICY_KEYWORDS = [
+    "what is the", "how do i", "how to", "when is", "where is",
+    "policy", "rule", "regulation", "requirement", "procedure",
+    "deadline", "fee", "cost", "scholarship", "waiver", "admission",
+    "apply", "application", "document", "eligibility", "gpa required",
+    "credit", "graduate", "library", "hostel", "transport", "exam",
+    "handbook", "calendar", "semester", "withdraw", "refund",
+]
+
+
+def _classify_intent(question: str) -> str:
+    """
+    Classify question as DATA or POLICY using keywords.
+    Zero API calls — saves your quota for actual answers.
+    """
+    q_lower = question.lower()
+
+    # Check DATA keywords first (personal data questions)
+    for keyword in DATA_KEYWORDS:
+        if keyword in q_lower:
+            return "DATA"
+
+    # Default to POLICY (handbook/RAG questions)
+    return "POLICY"
 
 
 async def route_question(question: str, user_id: int = None) -> dict:
+    """
+    Route the question to the correct handler.
+    Uses keyword matching instead of Gemini for classification
+    to save API quota.
+    """
     try:
-        classification_prompt = INTENT_CLASSIFICATION_PROMPT.format(
-            question=question
-        )
-        classification = client.models.generate_content(
-            model    = GENERATION_MODEL,
-            contents = classification_prompt,
-        )
-        intent = classification.text.strip().upper()
-
-        if intent not in ("DATA", "POLICY"):
-            intent = "POLICY"
-
+        intent = _classify_intent(question)
         print(f"  [Intent Router] '{question[:50]}' → {intent}")
 
         if intent == "DATA":
@@ -48,68 +71,15 @@ def _handle_policy_question(question: str) -> dict:
 
 
 async def _handle_data_question(question: str, user_id: int = None) -> dict:
-    result = ask_chloris_rag(question)
-    result["intent"] = "DATA"
-    return result
-    try:
-        # ── Step 1: Classify intent ───────────────────────────────────────────
-        classification_prompt = INTENT_CLASSIFICATION_PROMPT.format(
-            question=question
-        )
-        classification = classifier_model.generate_content(
-            classification_prompt
-        )
-        intent = classification.text.strip().upper()
-
-        # Normalize — if Gemini returns anything unexpected, default to POLICY
-        if intent not in ("DATA", "POLICY"):
-            intent = "POLICY"
-
-        print(f"  [Intent Router] Question: '{question[:50]}...' → {intent}")
-
-        # ── Step 2: Route to correct handler ──────────────────────────────────
-        if intent == "DATA":
-            return await _handle_data_question(question, user_id)
-        else:
-            return _handle_policy_question(question)
-
-    except Exception as e:
-        print(f"Intent Router Error: {e}")
-        return {
-            "answer":       FALLBACK_RESPONSE,
-            "sources":      [],
-            "intent":       "ERROR",
-            "chunks_found": 0,
-        }
-
-
-def _handle_policy_question(question: str) -> dict:
-    """Route to RAG engine for handbook/policy questions."""
-    result = ask_chloris_rag(question)
-    result["intent"] = "POLICY"
-    return result
-
-
-async def _handle_data_question(question: str, user_id: int = None) -> dict:
     """
-    Handle personal data questions (CGPA, routine, etc.)
-    Currently falls back to RAG — extend this function when
-    your SQL/CRUD layer is ready to serve student data.
+    Handle personal data questions.
+    Falls back to RAG for now — extend with SQL when ready.
     """
-    # ── Future: add SQL data lookups here ─────────────────────────────────
-    # Example (when your db/crud.py is ready):
-    #
+    # Future SQL lookups go here:
     # if "cgpa" in question.lower() and user_id:
     #     cgpa = get_student_cgpa(user_id)
-    #     return {
-    #         "answer":  f"Your current CGPA is {cgpa}.",
-    #         "sources": ["Student Records"],
-    #         "intent":  "DATA",
-    #         "chunks_found": 0,
-    #     }
-    # ──────────────────────────────────────────────────────────────────────
+    #     return {"answer": f"Your CGPA is {cgpa}.", "sources": ["Student Records"], ...}
 
-    # For now — fall back to RAG (often the handbook has this info anyway)
     result = ask_chloris_rag(question)
     result["intent"] = "DATA"
     return result
