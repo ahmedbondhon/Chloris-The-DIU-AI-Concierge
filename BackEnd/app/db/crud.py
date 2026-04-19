@@ -169,3 +169,5 @@ def get_fee_status(session: Session, user_id: int) -> list:
         }
         for p in payments
     ]
+
+
