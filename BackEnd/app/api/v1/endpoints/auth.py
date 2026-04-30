@@ -75,7 +75,6 @@ def login_access_token(
         "user": {
             "id": user.id,
             "email": user.email,
-            "full_name": user.full_name,
-            "department": user.department
+            "full_name": user.full_name
         }
     }

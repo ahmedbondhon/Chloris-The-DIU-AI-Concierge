@@ -12,21 +12,22 @@ const RetroCard: React.FC<RetroCardProps> = ({
     ...props
 }) => {
     const variants = {
-        primary: 'bg-white text-black border-black',
-        secondary: 'bg-retro-light text-black border-black',
-        glass: 'bg-white/80 backdrop-blur-md text-black border-black',
-        'neon-yellow': 'bg-retro-yellow text-black border-black',
-        'neon-pink': 'bg-retro-pink text-white border-black',
-        'neon-blue': 'bg-retro-blue text-black border-black',
+        primary: 'bg-white/5 text-white border-white/10 shadow-classic-lg',
+        secondary: 'bg-white/10 text-white border-white/20',
+        glass: 'bg-white/5 backdrop-blur-xl text-white border-white/10',
+        'neon-yellow': 'bg-white/5 text-white border-white/10',
+        'neon-pink': 'bg-white/5 text-white border-white/10',
+        'neon-blue': 'bg-white/5 text-white border-white/10',
     };
 
     return (
         <div
             className={cn(
-                'border-4 p-6 shadow-retro-hard transition-all',
+                'rounded-2xl border p-6 shadow-classic transition-all duration-300',
                 variants[variant],
                 className
             )}
+
             {...props}
         >
             {children}

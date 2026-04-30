@@ -20,27 +20,28 @@ const Navbar = () => {
     <header className="flex items-center justify-between py-6 font-outfit">
       {/* Page Title & Breadcrumb-ish info */}
       <div>
-        <h1 className="text-3xl font-black text-black tracking-tighter uppercase">{getPageTitle()}</h1>
+        <h1 className="text-3xl font-bold text-white tracking-tight">{getPageTitle()}</h1>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-[10px] font-black text-black uppercase tracking-widest bg-retro-yellow border border-black px-2 py-0.5 shadow-retro-hard-sm">Main</span>
-          <span className="text-black text-[10px] truncate">/</span>
-          <span className="text-black/60 text-[10px] font-black uppercase tracking-widest">{getPageTitle()}</span>
+          <span className="text-[11px] font-semibold text-white uppercase tracking-wider px-2 py-0.5 bg-white/10 rounded-md">Main</span>
+          <span className="text-white/20 text-[10px]">/</span>
+          <span className="text-white/40 text-[11px] font-medium tracking-wide">{getPageTitle()}</span>
         </div>
       </div>
 
       {/* Action Icons */}
       <div className="flex items-center gap-4">
-        <div className="hidden md:flex items-center bg-white border-2 border-black shadow-retro-hard-sm px-4 py-2 text-black focus-within:shadow-retro-hard transition-all w-64">
-          <Search size={18} />
-          <input type="text" placeholder="Search anything..." className="bg-transparent border-none outline-none text-sm ml-3 w-full font-black uppercase tracking-widest placeholder:text-black/40" />
+        <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-xl shadow-sm px-4 py-2.5 text-white/30 focus-within:border-white focus-within:ring-2 focus-within:ring-white/5 transition-all w-72">
+          <Search size={18} className="text-white/30" />
+          <input type="text" placeholder="Search resources..." className="bg-transparent border-none outline-none text-sm ml-3 w-full font-medium text-white placeholder:text-white/30" />
         </div>
 
-        <button className="relative p-3 bg-white border-2 border-black shadow-retro-hard-sm text-black hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all group" title="View notifications">
-          <Bell size={22} className="group-hover:rotate-12 transition-transform" />
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-retro-pink border-2 border-black rounded-full shadow-retro-hard-sm"></span>
+        <button className="relative p-3 bg-white/5 border border-white/10 rounded-xl shadow-sm text-white/60 hover:bg-white/10 transition-all group" title="View notifications">
+          <Bell size={22} className="group-hover:scale-110 transition-transform" />
+          <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-white rounded-full border-2 border-black"></span>
         </button>
       </div>
     </header>
+
   );
 };
 

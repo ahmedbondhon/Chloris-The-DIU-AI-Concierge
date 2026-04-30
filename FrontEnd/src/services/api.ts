@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-// 1. Create the connection instance
+// axios config
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/', // Points to your FastAPI Backend
+  baseURL: 'http://127.0.0.1:8000/api/v1/',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// 2. The "Interceptor" (The Security Guard)
-// Before any request leaves the browser, this checks if you have a token.
-// If you do, it stamps it onto the request header.
+// attach token if it exists
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');

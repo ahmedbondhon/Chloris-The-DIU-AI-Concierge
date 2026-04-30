@@ -11,23 +11,31 @@ export default {
             },
             colors: {
                 primary: {
-                    DEFAULT: '#5b52f1',
-                    hover: '#4a42d6',
+                    DEFAULT: '#ffffff', // Monochrome White
+                    dark: '#eeeeee',
+                    hover: '#d1d1d1',
+                    light: '#737373',
                 },
-                retro: {
-                    yellow: '#f9f871',
-                    pink: '#ff66c4',
-                    blue: '#00d4ff',
-                    dark: '#1a1a1a',
-                    light: '#f0f0f0',
-                    border: '#000000',
+                slate: {
+                    50: '#000000', // Pure Black
+                    100: '#0a0a0a',
+                    200: '#1a1a1a',
+                    300: '#262626',
+                    400: '#404040',
+                    500: '#737373',
+                    600: '#a3a3a3',
+                    700: '#d1d1d1',
+                    800: '#eeeeee',
+                    900: '#ffffff',
                 }
             },
+
             boxShadow: {
-                'retro-hard': '4px 4px 0px 0px rgba(0,0,0,1)',
-                'retro-hard-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
-                'retro-hard-lg': '8px 8px 0px 0px rgba(0,0,0,1)',
+                'classic': '0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05)',
+                'classic-lg': '0 10px 15px -3px rgb(255 255 255 / 0.05), 0 4px 6px -4px rgb(255 255 255 / 0.05)',
+                'classic-xl': '0 20px 25px -5px rgb(255 255 255 / 0.05), 0 8px 10px -6px rgb(255 255 255 / 0.05)',
             }
+
         },
     },
     plugins: [],

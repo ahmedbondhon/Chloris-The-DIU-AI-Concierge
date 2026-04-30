@@ -4,24 +4,23 @@ from google.genai import types
 import chromadb
 from core.config import settings
 
-# ── Configure Gemini ──────────────────────────────────────────────────────────
+# Gemini config
 client = genai.Client(api_key=settings.GOOGLE_API_KEY)
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
+# Paths
 BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
 KNOWLEDGE_BASE = os.path.join(BASE_DIR, "knowledge_base")
 CHROMA_PATH    = os.path.join(KNOWLEDGE_BASE, "chroma_db")
 
-# ── ChromaDB Client ───────────────────────────────────────────────────────────
+# ChromaDB setup
 chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 collection    = chroma_client.get_or_create_collection(
     name="chloris_knowledge",
     metadata={"hnsw:space": "cosine"}
 )
 
-# ── Model names ───────────────────────────────────────────────────────────────
-# Change it to this:
-GENERATION_MODEL ='gemini-2.5-flash'
+# Models
+GENERATION_MODEL = 'gemini-3.1-flash-lite-preview'
 EMBEDDING_MODEL  = "gemini-embedding-001"
 
 
@@ -39,15 +38,24 @@ def _chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> list:
     return [c for c in chunks if len(c) > 50]
 
 
-def _extract_text_from_pdf(pdf_path: str) -> str:
-    from pypdf import PdfReader
-    reader   = PdfReader(pdf_path)
-    all_text = []
-    for page_num, page in enumerate(reader.pages):
-        text = page.extract_text()
-        if text and text.strip():
-            all_text.append(f"[Page {page_num + 1}]\n{text.strip()}")
-    return "\n\n".join(all_text)
+def _extract_text_from_file(file_path: str) -> str:
+    ext = os.path.splitext(file_path)[1].lower()
+    
+    if ext == ".pdf":
+        from pypdf import PdfReader
+        reader   = PdfReader(file_path)
+        all_text = []
+        for page_num, page in enumerate(reader.pages):
+            text = page.extract_text()
+            if text and text.strip():
+                all_text.append(f"[Page {page_num + 1}]\n{text.strip()}")
+        return "\n\n".join(all_text)
+    
+    elif ext in [".md", ".txt"]:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+            
+    return ""
 
 
 def _embed_texts(texts: list) -> list:
@@ -62,15 +70,16 @@ def _embed_texts(texts: list) -> list:
 
 
 def build_knowledge_base(force_rebuild: bool = False) -> dict:
-    pdf_files = [
+    allowed_extensions = [".pdf", ".md", ".txt"]
+    kb_files = [
         f for f in os.listdir(KNOWLEDGE_BASE)
-        if f.lower().endswith(".pdf")
+        if any(f.lower().endswith(ext) for ext in allowed_extensions)
     ]
 
-    if not pdf_files:
+    if not kb_files:
         return {
-            "status":          "no_pdfs",
-            "message":         f"No PDFs found in {KNOWLEDGE_BASE}",
+            "status":          "no_files",
+            "message":         f"No supported files (.pdf, .md, .txt) found in {KNOWLEDGE_BASE}",
             "files_processed": 0,
             "chunks_added":    0,
         }
@@ -88,14 +97,14 @@ def build_knowledge_base(force_rebuild: bool = False) -> dict:
     total_chunks = 0
     files_done   = 0
 
-    for pdf_file in pdf_files:
-        pdf_path = os.path.join(KNOWLEDGE_BASE, pdf_file)
-        doc_name = pdf_file.replace(".pdf", "")
-        print(f"\n  Processing: {pdf_file}")
+    for kb_file in kb_files:
+        file_path = os.path.join(KNOWLEDGE_BASE, kb_file)
+        doc_name  = os.path.splitext(kb_file)[0]
+        print(f"\n  Processing: {kb_file}")
 
-        raw_text = _extract_text_from_pdf(pdf_path)
+        raw_text = _extract_text_from_file(file_path)
         if not raw_text.strip():
-            print(f"    WARNING: No text extracted from {pdf_file}")
+            print(f"    WARNING: No text extracted from {kb_file}")
             continue
 
         chunks = _chunk_text(raw_text)
@@ -111,7 +120,7 @@ def build_knowledge_base(force_rebuild: bool = False) -> dict:
                 new_ids.append(chunk_id)
                 new_chunks.append(chunk)
                 new_meta.append({
-                    "source":   pdf_file,
+                    "source":   kb_file,
                     "doc_name": doc_name,
                     "chunk":    i,
                 })
@@ -148,7 +157,7 @@ def build_knowledge_base(force_rebuild: bool = False) -> dict:
 # PILLAR 4 — Search + Generate
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def ask_chloris_rag(question: str, n_results: int = 3) -> dict:
+def ask_chloris_rag(question: str, history: list = None, n_results: int = 3) -> dict:
     from ai.prompts import (
         CHLORIS_SYSTEM_PERSONA,
         RAG_ANSWER_PROMPT,
@@ -200,12 +209,16 @@ def ask_chloris_rag(question: str, n_results: int = 3) -> dict:
 
         context_text = "\n\n---\n\n".join(relevant_docs)
 
-        # Step 3: Build prompt
-        prompt = RAG_ANSWER_PROMPT.format(
-            system_persona = CHLORIS_SYSTEM_PERSONA,
-            context        = context_text,
-            question       = question,
-        )
+        # Step 3: Format History for the prompt
+        history = history or []
+        history_text = "\n".join([f"{m.role}: {m.content}" for m in history]) if history else "No previous conversation."
+
+        # Step 4: Build prompt safely (using .replace to avoid { } crashes)
+        prompt = RAG_ANSWER_PROMPT \
+            .replace("{system_persona}", CHLORIS_SYSTEM_PERSONA) \
+            .replace("{chat_history}", history_text) \
+            .replace("{context}", context_text) \
+            .replace("{question}", question)
 
         # Step 4: Generate answer
         response = client.models.generate_content(

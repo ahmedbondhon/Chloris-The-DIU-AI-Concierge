@@ -91,123 +91,84 @@ def _format_fees(payments: list) -> str:
     return "\n".join(lines)
 
 
-async def route_question(question: str, user_id: int = None) -> dict:
+async def route_question(question: str, user_id: int = None, history: list = None) -> dict:
     try:
+        # speed lane for greetings
+        greetings = {"hi", "hello", "hey", "salaam", "morning", "evening"}
+        if question.lower().strip().rstrip('?!.') in greetings:
+            return {
+                "answer": "Hello! I'm Chloris. How can I assist you today? 🌿",
+                "sources": [],
+                "intent": "GREETING"
+            }
+
+        # pick a category (data vs policy)
         intent = _classify_intent(question)
-        print(f"  [Intent Router] '{question[:50]}' → {intent}")
+        print(f"--- Routing: {intent} ---")
 
         if intent == "DATA":
             return await _handle_data_question(question, user_id)
         else:
-            return _handle_policy_question(question)
+            return _handle_policy_question(question, history=history)
 
     except Exception as e:
-        print(f"Intent Router Error: {e}")
+        print(f"Router Error: {e}")
         return {
-            "answer":       FALLBACK_RESPONSE,
-            "sources":      [],
-            "intent":       "ERROR",
-            "chunks_found": 0,
+            "answer": "I hit a snag. Try again?",
+            "sources": [],
+            "intent": "ERROR"
         }
 
 
-def _handle_policy_question(question: str) -> dict:
-    result = ask_chloris_rag(question)
+def _handle_policy_question(question: str, history: list = None) -> dict:
+    # search the handbook
+    result = ask_chloris_rag(question, history=history)
     result["intent"] = "POLICY"
     return result
 
 
-async def _handle_data_question(question: str,
-                                 user_id: int = None) -> dict:
+async def _handle_data_question(question: str, user_id: int = None) -> dict:
+    # student data lookup
     q = question.lower()
     db = Session(engine)  
 
     try:
         if not user_id:
             return {
-                "answer":  "Please log in to access your personal information.",
+                "answer":  "Please log in to see your info.",
                 "sources": [],
                 "intent":  "DATA",
-                "chunks_found": 0,
             }
 
-        # ── CGPA ─────────────────────────────────────────────────────────────
+        # 1. CGPA & credits
         if any(k in q for k in ["cgpa", "gpa", "grade point", "credit"]):
             data = crud.get_cgpa(db, user_id)
             if "error" in data:
-                answer = "I couldn't find your academic profile."
+                answer = "No profile found."
             else:
                 answer = (
-                    f"Your current CGPA is {data['cgpa']} out of 4.00.\n"
-                    f"You have completed {data['credits_completed']} out of "
-                    f"{data['credits_required']} required credit hours.\n"
-                    f"Credits remaining to graduate: "
-                    f"{data['credits_remaining']}.\n"
-                    f"Program: {data['program']} | "
-                    f"Current Semester: {data['semester']}"
+                    f"Your CGPA is {data['cgpa']}/4.00.\n"
+                    f"Completed {data['credits_completed']}/{data['credits_required']} credits.\n"
+                    f"Program: {data['program']} | Semester: {data['semester']}"
                 )
-            return {
-                "answer": answer, "sources": ["Student Records"],
-                "intent": "DATA", "chunks_found": 0
-            }
+            return {"answer": answer, "sources": ["Records"], "intent": "DATA"}
 
-        # ── Today's Schedule ──────────────────────────────────────────────────
-        if any(k in q for k in ["today", "today's class", "classes today"]):
-            schedule = crud.get_today_schedule(db, user_id)
-            return {
-                "answer":  _format_schedule(schedule, "today's classes"),
-                "sources": ["Class Schedule"],
-                "intent":  "DATA", "chunks_found": 0,
-            }
-
-        # ── Full Schedule ─────────────────────────────────────────────────────
-        if any(k in q for k in ["schedule", "routine", "timetable",
-                                  "my class"]):
+        # 2. Schedule
+        if any(k in q for k in ["today", "schedule", "routine", "class"]):
             schedule = crud.get_schedule(db, user_id)
-            return {
-                "answer":  _format_schedule(schedule, "your weekly schedule"),
-                "sources": ["Class Schedule"],
-                "intent":  "DATA", "chunks_found": 0,
-            }
+            return {"answer": _format_schedule(schedule), "sources": ["Schedule"], "intent": "DATA"}
 
-        # ── Courses ───────────────────────────────────────────────────────────
-        if any(k in q for k in ["course", "subject", "enrollment",
-                                  "registered", "taking"]):
-            courses = crud.get_current_courses(db, user_id)
-            return {
-                "answer":  _format_courses(courses),
-                "sources": ["Enrollment Records"],
-                "intent":  "DATA", "chunks_found": 0,
-            }
+        # 3. Attendance
+        if any(k in q for k in ["attendance", "present", "absent"]):
+            records = crud.get_attendance(db, user_id)
+            return {"answer": _format_attendance(records), "sources": ["Attendance"], "intent": "DATA"}
 
-        # ── Attendance ────────────────────────────────────────────────────────
-        if any(k in q for k in ["attendance", "present", "absent",
-                                  "classes attended"]):
-            # Check if asking about a specific course
-            course_code = None
-            for word in q.split():
-                if len(word) >= 5 and word[:3].isalpha() and \
-                   word[3:].isdigit():
-                    course_code = word.upper()
-                    break
-            records = crud.get_attendance(db, user_id, course_code)
-            return {
-                "answer":  _format_attendance(records),
-                "sources": ["Attendance Records"],
-                "intent":  "DATA", "chunks_found": 0,
-            }
-
-        # ── Fee Status ────────────────────────────────────────────────────────
-        if any(k in q for k in ["fee", "payment", "paid", "owe",
-                                  "balance", "due"]):
+        # 4. Fees
+        if any(k in q for k in ["fee", "payment", "due"]):
             payments = crud.get_fee_status(db, user_id)
-            return {
-                "answer":  _format_fees(payments),
-                "sources": ["Fee Records"],
-                "intent":  "DATA", "chunks_found": 0,
-            }
+            return {"answer": _format_fees(payments), "sources": ["Fees"], "intent": "DATA"}
 
-        # ── Fallback to RAG if DATA keyword matched but no handler fit ────────
+        # fallback
         result = ask_chloris_rag(question)
         result["intent"] = "DATA"
         return result

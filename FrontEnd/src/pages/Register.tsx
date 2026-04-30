@@ -55,81 +55,95 @@ const Register = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-white overflow-hidden font-outfit">
+        <div className="flex min-h-screen bg-black overflow-hidden font-outfit">
             {/* Left Side: Branding (Hidden on Mobile) */}
             <motion.div
-                initial={{ x: '-10%', opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="hidden lg:flex w-[40%] bg-[#000000] relative flex-col justify-between p-12 text-white overflow-hidden border-r-4 border-white"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                className="hidden lg:flex w-[40%] bg-black relative flex-col justify-between p-12 text-white overflow-hidden border-r border-white/5"
             >
-                <div className="relative z-10 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-retro-yellow flex items-center justify-center border-2 border-black p-1 shadow-retro-hard-sm">
-                        <img src="/logo.png" alt="Chloris Logo" className="w-[80%] h-[80%] object-contain" />
-                    </div>
-                    <span className="text-xl font-black tracking-tighter uppercase text-retro-yellow">Chloris</span>
+                {/* Background Decorative Animated Circles */}
+                <motion.div
+                    animate={{
+                        y: [0, -20, 0],
+                        scale: [1, 1.05, 1],
+                    }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full -mr-64 -mt-64 blur-3xl pointer-events-none"
+                />
+                <motion.div
+                    animate={{
+                        y: [0, 20, 0],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                    className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full -ml-32 -mb-32 blur-3xl pointer-events-none"
+                />
+
+                <div className="relative z-10 flex items-center gap-4">
+                    <motion.div
+                        className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center shadow-classic border border-white/10 p-2"
+                    >
+                        <img src="/logo.png" alt="Chloris Logo" className="w-[80%] h-[80%] object-contain invert" />
+                    </motion.div>
+                    <span className="text-xl font-bold tracking-tight text-white">CHLORIS</span>
                 </div>
 
                 <div className="relative z-10">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-retro-pink text-white font-black uppercase tracking-wider mb-4 border-2 border-white shadow-retro-hard-sm"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 text-white/60 rounded-full text-[11px] font-bold uppercase tracking-wider mb-8 border border-white/20"
                     >
-                        <Sparkles size={12} className="text-retro-yellow" />
+                        <Sparkles size={14} />
                         Join the DIU AI Portal
                     </motion.div>
-                    <h2 className="text-5xl font-black leading-tight mb-4 uppercase">
+                    <h2 className="text-5xl font-bold leading-tight mb-8">
                         Create your <br />
-                        <span className="text-retro-blue">Student Account</span>
+                        <span className="text-white italic">Student Account</span>
                     </h2>
-                    <p className="text-slate-300 text-sm font-bold leading-relaxed max-w-xs">
+                    <p className="text-white/40 text-lg font-medium leading-relaxed max-w-xs">
                         Unlock all features by creating your official student profile.
                     </p>
                 </div>
 
-                <div className="relative z-10 flex items-center gap-4 border-t-2 border-white pt-8">
-                    <ShieldCheck size={24} className="text-retro-yellow" />
-                    <p className="text-[10px] font-black tracking-widest uppercase text-white">Verified DIU Portal</p>
+                <div className="relative z-10 flex items-center gap-4 border-t border-white/10 pt-8">
+                    <ShieldCheck size={24} className="text-white" />
+                    <p className="text-[10px] font-bold tracking-widest uppercase text-white/40">Verified DIU Portal</p>
                 </div>
-
-                {/* Animated Background Items */}
-                <div className="absolute top-1/2 -right-20 w-64 h-64 bg-retro-blue/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 -left-10 w-48 h-48 bg-retro-pink/10 rounded-full blur-3xl" />
             </motion.div>
+
 
             {/* Right Side: Registration Form */}
             <motion.div
-                initial={{ x: '10%', opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 flex items-center justify-center p-6 retro-grid overflow-y-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                className="flex-1 flex items-center justify-center p-6 bg-black overflow-y-auto"
             >
-                <RetroCard variant="secondary" className="w-full max-w-2xl border-black space-y-6 my-8">
+                <RetroCard variant="primary" className="w-full max-w-2xl !rounded-3xl border-white/10 shadow-classic-xl space-y-6 my-8 p-10 bg-white/5">
                     <motion.div variants={itemVariants} className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                        <Link to="/login" className="mb-6 flex items-center gap-2 text-retro-blue hover:text-retro-pink transition-colors font-black text-xs uppercase tracking-widest group">
+                        <Link to="/login" className="mb-8 flex items-center gap-2 text-white hover:text-white/80 transition-colors font-bold text-xs uppercase tracking-widest group">
                             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                             Back to Login
                         </Link>
-                        <h1 className="text-4xl font-black text-black tracking-tighter uppercase">Student Registration</h1>
-                        <p className="text-retro-pink font-bold mt-2 text-xs uppercase tracking-wide">Fill in your information to get started.</p>
+                        <h1 className="text-5xl font-extrabold text-white tracking-tight mb-3">Student Registration</h1>
+                        <p className="text-white/40 font-medium tracking-wide text-sm uppercase">Fill in your information to get started.</p>
                     </motion.div>
 
-                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         {error && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="col-span-1 md:col-span-2 p-3 text-xs font-black text-white bg-retro-pink border-2 border-black shadow-retro-hard-sm flex items-center gap-3"
+                                className="col-span-1 md:col-span-2 p-4 text-sm font-semibold text-white bg-white/10 border border-white/20 rounded-xl flex items-center gap-3"
                             >
-                                <div className="w-2 h-2 bg-white animate-pulse shrink-0"></div>
+                                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse shrink-0"></div>
                                 {error}
                             </motion.div>
                         )}
 
-                        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Full Name</label>
+                        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Full Name</label>
                             <RetroInput
                                 placeholder="Ex: John Doe"
                                 value={formData.full_name}
@@ -138,8 +152,8 @@ const Register = () => {
                             />
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Student ID</label>
+                        <motion.div variants={itemVariants} className="space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Student ID</label>
                             <RetroInput
                                 placeholder="Ex: 221-15-XXX"
                                 value={formData.student_id}
@@ -148,8 +162,8 @@ const Register = () => {
                             />
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Phone Number</label>
+                        <motion.div variants={itemVariants} className="space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Phone Number</label>
                             <RetroInput
                                 placeholder="Ex: 017XXXXXXXX"
                                 value={formData.phone}
@@ -157,8 +171,8 @@ const Register = () => {
                             />
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Email Address</label>
+                        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Email Address</label>
                             <RetroInput
                                 placeholder="example@mail.com"
                                 type="email"
@@ -168,8 +182,8 @@ const Register = () => {
                             />
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Department</label>
+                        <motion.div variants={itemVariants} className="space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Department</label>
                             <RetroInput
                                 placeholder="Ex: CSE"
                                 value={formData.department}
@@ -177,8 +191,8 @@ const Register = () => {
                             />
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Batch</label>
+                        <motion.div variants={itemVariants} className="space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Batch</label>
                             <RetroInput
                                 placeholder="Ex: 58th"
                                 value={formData.batch}
@@ -186,8 +200,8 @@ const Register = () => {
                             />
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 space-y-1">
-                            <label className="text-[10px] font-black text-black uppercase tracking-widest ml-1">Password</label>
+                        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 space-y-2">
+                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">Password</label>
                             <RetroInput
                                 placeholder="••••••••"
                                 type="password"
@@ -199,20 +213,21 @@ const Register = () => {
 
                         <motion.div
                             variants={itemVariants}
-                            className="col-span-1 md:col-span-2 pt-4"
+                            className="col-span-1 md:col-span-2 pt-6"
                         >
-                            <RetroButton type="submit" variant="neon-yellow" className="w-full py-4 text-sm font-black">
-                                <UserPlus size={18} className="mr-3 shrink-0" />
+                            <RetroButton type="submit" variant="primary" className="w-full py-4 text-base font-bold rounded-2xl shadow-classic-lg bg-white text-black hover:bg-white/90">
+                                <UserPlus size={20} className="mr-3 shrink-0" />
                                 REGISTER ACCOUNT
                             </RetroButton>
                         </motion.div>
                     </form>
 
-                    <motion.div variants={itemVariants} className="text-center text-slate-600 font-black uppercase tracking-widest text-[10px]">
-                        Already have an account? <Link to="/login" className="text-retro-pink hover:text-retro-yellow underline underline-offset-4 decoration-2">Sign In here</Link>
+                    <motion.div variants={itemVariants} className="text-center text-white/40 font-semibold uppercase tracking-wider text-[11px]">
+                        Already have an account? <Link to="/login" className="text-white hover:underline underline-offset-4 decoration-2">Sign In here</Link>
                     </motion.div>
                 </RetroCard>
             </motion.div>
+
         </div>
     );
 };

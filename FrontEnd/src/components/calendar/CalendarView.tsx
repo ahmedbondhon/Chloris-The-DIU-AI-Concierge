@@ -48,11 +48,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   };
 
   return (
-    <div className="w-full bg-slate-900/40 backdrop-blur-3xl border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl shadow-black/50 font-outfit">
+    <div className="w-full bg-white/5 backdrop-blur-3xl border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl shadow-black/50 font-outfit">
       {/* --- Header: Month & Navigation --- */}
-      <div className="flex items-center justify-between px-8 py-8 lg:px-10 border-b border-white/5 bg-slate-800/80 backdrop-blur-xl">
+      <div className="flex items-center justify-between px-8 py-8 lg:px-10 border-b border-white/5 bg-white/10 backdrop-blur-xl">
         <div className="flex items-center gap-4 lg:gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
+          <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-black shadow-xl shadow-white/10">
             <CalendarIcon size={28} />
           </div>
           <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight">
@@ -62,14 +62,14 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         <div className="flex gap-3">
           <button
             onClick={prevMonth}
-            className="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-2xl text-slate-300 transition-all border border-white/5 shadow-sm active:scale-95"
+            className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/40 transition-all border border-white/5 shadow-sm active:scale-95"
             title="Previous month"
           >
             <ChevronLeft size={24} />
           </button>
           <button
             onClick={nextMonth}
-            className="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-2xl text-slate-300 transition-all border border-white/5 shadow-sm active:scale-95"
+            className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/40 transition-all border border-white/5 shadow-sm active:scale-95"
             title="Next month"
           >
             <ChevronRight size={24} />
@@ -78,9 +78,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       </div>
 
       {/* --- Days of Week Header --- */}
-      <div className="grid grid-cols-7 border-b border-white/5 bg-slate-900/20">
+      <div className="grid grid-cols-7 border-b border-white/5 bg-white/5">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div key={day} className="py-6 text-center text-[10px] lg:text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">
+          <div key={day} className="py-6 text-center text-[10px] lg:text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">
             {day}
           </div>
         ))}
@@ -100,10 +100,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               className={`
                 relative min-h-[5rem] lg:min-h-[7rem] rounded-[1.5rem] lg:rounded-[2rem] p-4 cursor-pointer transition-all duration-300
                 ${isSelected
-                  ? 'bg-indigo-600 text-white shadow-2xl shadow-indigo-600/20 scale-[0.98]'
+                  ? 'bg-white text-black shadow-2xl shadow-white/10 scale-[0.98]'
                   : isCurrentMonth
-                    ? 'bg-slate-800/40 border border-white/5 hover:bg-slate-800/80 hover:shadow-2xl hover:shadow-black/20 text-slate-100'
-                    : 'text-slate-600 pointer-events-none opacity-20'
+                    ? 'bg-white/5 border border-white/5 hover:bg-white/10 hover:shadow-2xl hover:shadow-black/20 text-white'
+                    : 'text-white/20 pointer-events-none opacity-20'
                 }
                 group
               `}
@@ -113,8 +113,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
                 <div className="flex justify-between items-start">
                   <span className={`
                     text-base lg:text-lg font-black w-8 lg:w-10 h-8 lg:h-10 flex items-center justify-center rounded-2xl transition-all
-                    ${isDayToday && !isSelected ? 'bg-indigo-500/10 text-indigo-400' : ''}
-                    ${isSelected ? 'bg-white/20' : ''}
+                    ${isDayToday && !isSelected ? 'bg-white/10 text-white' : ''}
+                    ${isSelected ? 'bg-black/10' : ''}
                   `}>
                     {format(day, 'd')}
                   </span>

@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-# THIS IS THE FIX: We added "api." to the start of this line
 from api.v1.endpoints import auth, chat, bookings
 
 api_router = APIRouter()

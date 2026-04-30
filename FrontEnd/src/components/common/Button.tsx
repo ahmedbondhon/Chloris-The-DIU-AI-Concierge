@@ -18,14 +18,14 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
 
   // 1. Base Styles (applies to all buttons)
-  const baseStyles = "inline-flex items-center justify-center font-black rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 uppercase tracking-widest text-[11px]";
+  const baseStyles = "inline-flex items-center justify-center font-bold rounded-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] tracking-tight";
 
   // 2. Variants (Colors)
   const variants = {
-    primary: "bg-[#5b52f1] text-white hover:bg-[#4a42d6] focus:ring-[#5b52f1]/20 shadow-xl shadow-[#5b52f1]/20 border border-white/10",
-    secondary: "bg-white text-slate-700 border border-slate-100 hover:bg-slate-50 hover:border-slate-200 focus:ring-slate-100 shadow-sm",
-    danger: "bg-rose-500 text-white hover:bg-rose-600 focus:ring-rose-500/20 shadow-xl shadow-rose-500/20 border border-white/10",
-    ghost: "bg-transparent text-slate-500 hover:bg-[#5b52f1]/5 hover:text-[#5b52f1]",
+    primary: "bg-primary text-white hover:bg-primary-dark focus:ring-primary/20 shadow-classic shadow-primary/20",
+    secondary: "bg-white text-slate-800 border border-slate-200 hover:bg-slate-50 focus:ring-slate-100 shadow-classic",
+    danger: "bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500/20 shadow-classic shadow-rose-500/20",
+    ghost: "bg-transparent text-slate-600 hover:bg-primary/5 hover:text-primary",
   };
 
   // 3. Sizes

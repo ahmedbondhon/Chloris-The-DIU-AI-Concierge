@@ -11,7 +11,8 @@ const MainLayout = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex min-h-screen bg-white retro-grid font-outfit">
+    <div className="flex min-h-screen bg-black font-outfit">
+
       {/* Sidebar - Pass state and close function */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
@@ -21,7 +22,7 @@ const MainLayout = () => {
         {!isSidebarOpen && (
           <button
             onClick={toggleSidebar}
-            className="lg:hidden fixed top-6 left-6 z-[60] p-3 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/5 text-indigo-400 active:scale-95 transition-all"
+            className="lg:hidden fixed top-6 left-6 z-[60] p-3 bg-white text-black backdrop-blur-md rounded-2xl shadow-xl border border-white/10 active:scale-95 transition-all"
             title="Open menu"
           >
             <Menu size={24} />

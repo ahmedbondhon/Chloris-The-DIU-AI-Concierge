@@ -27,7 +27,8 @@ const Input: React.FC<InputProps> = ({
         className={`
           w-full px-4 py-3.5 bg-slate-50 border-2 rounded-xl text-sm transition-all text-black
           placeholder:text-slate-500 placeholder:font-medium
-          focus:outline-none focus:ring-4 focus:ring-[#5b52f1]/10 focus:bg-white focus:border-[#5b52f1]
+          focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white focus:border-primary
+
           ${error ? 'border-rose-200 focus:ring-rose-100' : 'border-slate-50'}
           ${className}
         `}

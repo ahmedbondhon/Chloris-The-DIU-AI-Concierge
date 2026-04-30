@@ -7,16 +7,14 @@ export interface ChatMessage {
 }
 
 export const chatService = {
-  // Send a message to the AI
-  sendMessage: async (message: string) => {
+  // send user query to backend
+  sendMessage: async (message: string, history: any[] = []) => {
     try {
-      // POST request to your Python Chat Endpoint (/chat/query as per backend)
-      const response = await api.post('/chat/query', {
-        message: message
+      const response = await api.post('chat/query', {
+        message: message,
+        history: history
       });
 
-      // Return the AI's answer
-      // Backend returns: { "response": "answer text", "sources": [...] }
       return {
         text: response.data.response,
         sender: 'bot' as const,

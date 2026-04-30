@@ -4,47 +4,38 @@ from core.config import settings
 from db.session import init_db
 from api.v1.api import api_router
 
-# 1. Initialize the App
+# 1. App setup
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    description="Backend API for Chloris - The AI University Concierge"
+    description="Backend for Chloris"
 )
 
-# 2. CORS Configuration (The "Security Guard")
-# This section allows your React Frontend (port 5173) to talk to this Backend.
-origins = [
-    "http://localhost:5173",    # Vite Localhost
-    "http://127.0.0.1:5173",    # Vite IP Address
-    "http://localhost:3000",    # Backup
-]
-
+# 2. CORS - allowing frontend to connect
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],        # Allow all types of requests (POST, GET, etc.)
-    allow_headers=["*"],        # Allow all headers (Login tokens, etc.)
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# 3. Startup Event (Database Check)
+# 3. DB init on startup
 @app.on_event("startup")
 def on_startup():
-    print("--------------------------------")
-    print("  Chloris Backend Starting...")
-    print("  Checking database tables...")
+    print("--- Chloris starting up ---")
     init_db()
-    print("  Database is ready!")
-    print("--------------------------------")
+    print("--- DB ready ---")
 
-# 4. Connect the Routes (Chat, Auth, Bookings)
+# 4. Routes
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
-# 5. Root Endpoint (Health Check)
+# 5. Health check
 @app.get("/")
 def read_root():
     return {
         "status": "active",
-        "message": "Welcome to Chloris AI Backend!",
-        "docs_url": "http://127.0.0.1:8000/docs"
+        "message": "Chloris AI is online",
+        "docs": "http://127.0.0.1:8000/docs"
     }

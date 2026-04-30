@@ -32,9 +32,9 @@ const Dashboard = () => {
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "GOOD MORNING";
-    if (hour < 18) return "GOOD AFTERNOON";
-    return "GOOD EVENING";
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
   };
 
   return (
@@ -42,31 +42,31 @@ const Dashboard = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-10 pb-12 px-2 lg:px-6 font-outfit min-h-screen pt-10"
+      className="space-y-10 pb-12 px-2 lg:px-6 font-outfit min-h-screen pt-10 bg-black"
     >
       {/* Top Welcome Section */}
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-1">
         <div>
-          <h1 className="text-4xl lg:text-6xl font-black text-black tracking-tighter mb-3 uppercase">
-            {getTimeGreeting()}, <span className="text-retro-yellow">John!</span> 👋
+          <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tight mb-3">
+            {getTimeGreeting()}, <span className="text-white font-extrabold">John!</span> 👋
           </h1>
-          <p className="text-slate-600 font-bold text-lg lg:text-xl max-w-2xl leading-relaxed uppercase tracking-wide">
-            Welcome back to your personalized academic hub. You're making <span className="text-retro-pink font-black italic">excellent</span> progress this semester.
+          <p className="text-white/40 font-medium text-lg lg:text-xl max-w-2xl leading-relaxed">
+            Welcome back to your personalized academic hub. You're making <span className="text-white font-bold italic">excellent</span> progress this semester.
           </p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex -space-x-4 overflow-hidden p-1">
+          <div className="flex -space-x-3 overflow-hidden p-1">
             {[1, 2, 3, 4].map(i => (
               <motion.div
                 key={i}
                 whileHover={{ y: -5, scale: 1.1 }}
-                className="inline-block h-14 w-14 border-2 border-black bg-white cursor-pointer overflow-hidden shadow-retro-hard-sm"
+                className="inline-block h-12 w-12 rounded-full border-2 border-white/20 bg-black cursor-pointer overflow-hidden shadow-classic"
               >
                 <img src={`https://i.pravatar.cc/150?u=${i + 10}`} alt="user" className="w-full h-full object-cover" />
               </motion.div>
             ))}
-            <div className="flex items-center justify-center h-14 w-14 border-2 border-black bg-retro-blue text-black text-xs font-black shadow-retro-hard-sm">
+            <div className="flex items-center justify-center h-12 w-12 rounded-full border-2 border-white/20 bg-white/10 text-white text-xs font-bold shadow-classic">
               +12
             </div>
           </div>
@@ -79,9 +79,9 @@ const Dashboard = () => {
           {
             title: 'Academic GPA',
             value: '3.85 / 4.0',
-            trend: '+0.2 UP',
+            trend: '+0.2 Up',
             icon: TrendingUp,
-            color: 'retro-blue',
+            color: 'blue',
             desc: 'Top 5% of your class'
           },
           {
@@ -89,7 +89,7 @@ const Dashboard = () => {
             value: '94%',
             trend: 'Perfect',
             icon: Clock,
-            color: 'retro-yellow',
+            color: 'amber',
             progress: 94,
             desc: '12 consecutive days'
           },
@@ -98,48 +98,47 @@ const Dashboard = () => {
             value: '2 Tasks',
             trend: 'Priority',
             icon: Target,
-            color: 'retro-pink',
+            color: 'pink',
             desc: 'Next: Data Structures Exam'
           }
         ].map((stat, idx) => (
           <RetroCard
             key={idx}
-            variant="secondary"
-            className="group cursor-pointer relative overflow-hidden"
+            variant="primary"
+            className="group cursor-pointer relative overflow-hidden !rounded-3xl border-white/5 hover:border-white/20"
           >
             <div className="flex justify-between items-start mb-8 relative z-10">
               <div className={cn(
-                "w-16 h-16 border-2 border-black flex items-center justify-center text-black shadow-retro-hard-sm transition-all duration-500",
-                stat.color === 'retro-blue' ? 'bg-retro-blue' : stat.color === 'retro-yellow' ? 'bg-retro-yellow' : 'bg-retro-pink'
+                "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-sm bg-white/10 text-white group-hover:bg-white group-hover:text-black"
               )}>
-                <stat.icon size={30} strokeWidth={2.5} />
+                <stat.icon size={28} strokeWidth={2} />
               </div>
-              <span className="px-4 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest border-2 border-white shadow-retro-hard-sm">
+              <span className="px-3 py-1 bg-black border border-white/5 text-white/40 text-[10px] font-bold uppercase tracking-wider rounded-lg shadow-sm">
                 {stat.trend}
               </span>
             </div>
 
             <div className="relative z-10">
-              <p className="text-retro-yellow font-black mb-1 uppercase tracking-widest text-[11px]">{stat.title}</p>
-              <h3 className="text-4xl font-black text-black mb-2 tracking-tighter uppercase">{stat.value}</h3>
+              <p className="text-white/40 font-semibold mb-1 uppercase tracking-wider text-[11px]">{stat.title}</p>
+              <h3 className="text-3xl font-bold text-white mb-2 tracking-tight">{stat.value}</h3>
 
               {stat.progress ? (
                 <div className="mt-4">
-                  <div className="w-full bg-black border-2 border-white h-4 p-0.5">
+                  <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden px-0">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${stat.progress}%` }}
                       transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
-                      className="h-full bg-retro-blue"
+                      className="h-full bg-white/80"
                     ></motion.div>
                   </div>
-                  <p className="text-slate-600 text-[10px] mt-3 font-black uppercase tracking-widest flex items-center gap-2">
-                    <Sparkles size={12} className="text-retro-yellow" /> {stat.desc}
+                  <p className="text-white/40 text-[11px] mt-3 font-medium flex items-center gap-2">
+                    <Sparkles size={12} className="text-white" /> {stat.desc}
                   </p>
                 </div>
               ) : (
-                <p className="text-slate-400 text-[10px] mt-1 font-black uppercase tracking-widest flex items-center gap-2">
-                  <Star size={12} className="text-retro-pink" fill="currentColor" /> {stat.desc}
+                <p className="text-white/40 text-[11px] mt-1 font-medium flex items-center gap-2">
+                  <Star size={12} className="text-white" fill="#ffffff" /> {stat.desc}
                 </p>
               )}
             </div>
@@ -147,56 +146,56 @@ const Dashboard = () => {
         ))}
       </div>
 
+
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
         {/* Main Content: Recent Activity */}
         <motion.div variants={itemVariants} className="lg:col-span-3 space-y-8">
           <div className="flex items-center justify-between px-2">
-            <h2 className="text-3xl font-black text-black tracking-tighter uppercase flex items-center gap-4">
-              <div className="w-4 h-10 bg-retro-pink border-2 border-black shadow-retro-hard-sm"></div>
+            <h2 className="text-3xl font-bold text-white tracking-tight flex items-center gap-4">
+              <div className="w-1.5 h-8 bg-white rounded-full"></div>
               Recent Activity
             </h2>
             <RetroButton
               variant="outline"
               size="sm"
               onClick={() => navigate('/bookings')}
-              className="text-[10px]"
+              className="text-xs font-semibold rounded-xl"
             >
-              EXPLORE ALL
+              Explore All
             </RetroButton>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-4">
             {[
-              { room: 'Study Pod B', location: 'Main Library', time: '2:00 PM - 4:00 PM', status: 'Confirmed', color: 'retro-blue' },
-              { room: 'Physics Lab 04', location: 'Science Block', time: 'Tomorrow, 9:00 AM', status: 'Pending', color: 'retro-pink' }
+              { room: 'Study Pod B', location: 'Main Library', time: '2:00 PM - 4:00 PM', status: 'Confirmed', color: 'blue' },
+              { room: 'Physics Lab 04', location: 'Science Block', time: 'Tomorrow, 9:00 AM', status: 'Pending', color: 'pink' }
             ].map((item, idx) => (
               <motion.div
                 key={idx}
                 whileHover={{ x: 5 }}
                 className={cn(
-                  "bg-white border-4 p-6 flex items-center gap-8 group cursor-pointer border-black shadow-retro-hard transition-all",
-                  item.color === 'retro-blue' ? 'hover:bg-retro-blue/10' : 'hover:bg-retro-pink/10'
+                  "bg-white/5 border rounded-2xl p-5 flex items-center gap-6 group cursor-pointer border-white/5 shadow-classic transition-all hover:border-white/20"
                 )}
               >
-                <div className={cn(
-                  "w-16 h-16 border-2 border-black flex items-center justify-center shadow-retro-hard-sm",
-                  item.color === 'retro-blue' ? 'bg-retro-blue' : 'bg-retro-pink'
-                )}>
-                  <Building size={28} strokeWidth={2} className="text-black" />
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm bg-white/10 text-white group-hover:bg-white group-hover:text-black transition-colors">
+                  <Building size={24} strokeWidth={2} />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
-                    <h4 className="font-black text-black text-xl uppercase tracking-tighter">{item.room}</h4>
-                    <span className="px-3 py-1 bg-black text-white text-[9px] font-black uppercase tracking-widest border border-white">
+                    <h4 className="font-bold text-white text-lg">{item.room}</h4>
+                    <span className={cn(
+                      "px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider",
+                      item.status === 'Confirmed' ? 'bg-white/10 text-white' : 'bg-white/5 text-white/40'
+                    )}>
                       {item.status}
                     </span>
                   </div>
-                  <p className="text-slate-600 font-black text-[12px] uppercase tracking-widest flex items-center gap-2">
-                    {item.location} <span className="w-2 h-2 bg-retro-yellow"></span> {item.time}
+                  <p className="text-white/40 font-medium text-xs flex items-center gap-2">
+                    {item.location} <span className="w-1 h-1 bg-white/10 rounded-full"></span> {item.time}
                   </p>
                 </div>
-                <div className="bg-black text-white p-3 border-2 border-white shadow-retro-hard-sm">
-                  <ArrowRight size={20} />
+                <div className="bg-white/5 text-white/30 group-hover:bg-white group-hover:text-black p-2.5 rounded-xl transition-all">
+                  <ArrowRight size={18} />
                 </div>
               </motion.div>
             ))}
@@ -209,43 +208,47 @@ const Dashboard = () => {
           whileHover={{ y: -5 }}
           className="lg:col-span-2 relative group"
         >
-          <div className="relative h-full overflow-hidden border-4 border-black bg-retro-blue p-10 flex flex-col justify-between shadow-retro-hard">
+          <div className="relative h-full overflow-hidden rounded-[2rem] bg-white/5 border border-white/10 p-10 flex flex-col justify-between shadow-classic-xl">
+            {/* Background Gradient Effect */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-white/10 transition-all duration-500"></div>
+
             <div className="relative z-10">
               <div className="flex items-center gap-4 mb-10">
-                <div className="w-16 h-16 bg-white border-2 border-black flex items-center justify-center text-black shadow-retro-hard-sm">
-                  <Bot size={34} strokeWidth={2.5} />
+                <div className="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/10 shadow-lg">
+                  <Bot size={30} strokeWidth={2} />
                 </div>
-                <div className="bg-black border-2 border-white px-4 py-2 shadow-retro-hard-sm">
+                <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl backdrop-blur-md">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-retro-yellow animate-pulse"></div>
-                    <span className="text-[10px] font-black text-white uppercase tracking-widest">Chloris v2.0 Online</span>
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-bold text-white uppercase tracking-wider">Chloris v2.0 AI</span>
                   </div>
                 </div>
               </div>
 
-              <h3 className="text-4xl lg:text-5xl font-black text-black leading-[1.0] mb-6 tracking-tighter uppercase">
+              <h3 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6 tracking-tight">
                 Stuck with <br />
-                studies? <br />
-                <span className="text-black/60">Ask Chloris AI.</span>
+                your studies? <br />
+                <span className="text-white/20">Ask Chloris.</span>
               </h3>
 
-              <p className="text-black/80 font-black text-sm uppercase tracking-wide leading-relaxed max-w-xs">
-                Instant intelligence about campus, policies, and your future.
+              <p className="text-white/60 font-medium text-sm leading-relaxed max-w-xs">
+                Instant intelligence about campus, policies, and your academic future.
               </p>
             </div>
 
             <RetroButton
-              variant="neon-yellow"
+              variant="primary"
               size="lg"
               onClick={() => navigate('/chat')}
-              className="w-full text-xl"
+              className="w-full text-lg mt-8 rounded-2xl bg-white text-black border-none hover:bg-white/90"
             >
-              START INTELLIGENT CHAT
-              <Zap size={24} className="ml-3" />
+              Start Chat
+              <Zap size={22} className="ml-3 text-black" fill="currentColor" />
             </RetroButton>
           </div>
         </motion.div>
       </div>
+
     </motion.div>
   );
 };

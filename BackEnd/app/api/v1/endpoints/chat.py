@@ -7,40 +7,25 @@ router = APIRouter()
 
 @router.post("/query", response_model=ChatResponse)
 async def chat_query(request: ChatRequest):
-    """
-    Send a message to Chloris AI (Direct Google Gemini + ChromaDB).
-    """
+    # main chat endpoint
     try:
-        # Call the new "No-LangChain" AI Service
-        # It handles searching the DB + asking Gemini directly
-        result = await ask_chloris(request.message)
+        result = await ask_chloris(request.message, history=request.history)
         
-        # The new service returns {"answer": ..., "sources": ...}
-        # which maps perfectly to our response model
         return ChatResponse(
             response=result["answer"],
             sources=result["sources"]
         )
         
     except Exception as e:
-        # Log the actual error to the console for debugging
-        print(f"ERROR in /chat/query: {str(e)}")
-        
-        # Return a generic error to the frontend so the app doesn't crash
+        print(f"Error: {e}")
         raise HTTPException(
             status_code=500, 
-            detail=f"AI Service Failure: {str(e)}"
+            detail="AI error"
         )
 
 @router.post("/build-knowledge-base")
 async def trigger_build_knowledge_base(force_rebuild: bool = False):
-    """
-    Trigger PDF ingestion into ChromaDB.
-    Call this once after adding new PDFs to ai/knowledge_base/.
-
-    force_rebuild=true  → clears existing DB and rebuilds from scratch
-    force_rebuild=false → only ingests new PDFs (safe to run repeatedly)
-    """
+    # rebuild vector db from markdown files
     try:
         result = build_knowledge_base(force_rebuild=force_rebuild)
         return result
