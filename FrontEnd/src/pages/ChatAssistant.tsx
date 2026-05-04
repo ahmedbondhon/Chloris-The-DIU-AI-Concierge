@@ -65,7 +65,7 @@ const ChatAssistant = () => {
         </div>
         <div className="hidden sm:flex items-center gap-3 px-5 py-2.5 bg-white/10 rounded-2xl text-white text-[11px] lg:text-[12px] font-bold uppercase tracking-wider border border-white/10">
           <Sparkles size={16} />
-          Gemini 3.1 Flash
+          Gemini 2.0 Flash
         </div>
       </div>
 

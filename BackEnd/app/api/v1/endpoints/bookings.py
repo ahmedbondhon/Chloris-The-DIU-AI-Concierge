@@ -2,8 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from core.database import get_session
-from models.booking import Booking
-from models.user import User
+from models.db_models import Booking, User
 from schemas.booking import BookingCreate, BookingRead
 from .auth import get_current_user # Import the "Bouncer"
 

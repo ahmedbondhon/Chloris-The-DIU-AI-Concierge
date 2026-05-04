@@ -44,6 +44,7 @@ def get_cgpa(session: Session, user_id: int) -> dict:
         return {"error": "Student profile not found"}
     return {
         "cgpa":              profile.cgpa,
+        "current_year":      profile.current_year,
         "credits_completed": profile.credits_completed,
         "credits_required":  profile.credits_required,
         "credits_remaining": profile.credits_required - profile.credits_completed,
@@ -76,6 +77,9 @@ def get_current_courses(session: Session, user_id: int) -> list:
                 "department":   course.department,
                 "semester":     e.semester,
                 "grade":        e.grade or "In Progress",
+                "quiz_mark":    e.quiz_mark,
+                "mid_mark":     e.mid_mark,
+                "final_mark":   e.final_mark,
             })
     return results
 
@@ -171,3 +175,16 @@ def get_fee_status(session: Session, user_id: int) -> list:
     ]
 
 
+def get_all_student_context(session: Session, user_id: int) -> dict:
+    """Aggregates all student data for Left Brain LLM synthesis."""
+    profile_data = get_cgpa(session, user_id)
+    if "error" in profile_data:
+        return {"error": "Student profile not found"}
+        
+    return {
+        "profile":    profile_data,
+        "courses":    get_current_courses(session, user_id),
+        "schedule":   get_schedule(session, user_id),
+        "attendance": get_attendance(session, user_id),
+        "fees":       get_fee_status(session, user_id),
+    }
