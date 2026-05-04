@@ -1,3 +1,4 @@
+# Chloris Backend - V3 Hardened (Front-Line Empathy + Solutions Engine V2) 🥀🤍🚀
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
@@ -24,7 +25,9 @@ app.add_middleware(
 # 3. DB init on startup
 @app.on_event("startup")
 def on_startup():
-    print("--- Chloris starting up ---")
+    print("*****************************************")
+    print("*** CHLORIS RELOADED: USING GEMINI 2.0 ***")
+    print("*****************************************")
     init_db()
     print("--- DB ready ---")
 

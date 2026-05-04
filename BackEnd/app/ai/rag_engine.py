@@ -20,8 +20,8 @@ collection    = chroma_client.get_or_create_collection(
 )
 
 # Models
-GENERATION_MODEL = 'gemini-3.1-flash-lite-preview'
-EMBEDDING_MODEL  = "gemini-embedding-001"
+GENERATION_MODEL = 'models/gemini-2.0-flash'
+EMBEDDING_MODEL  = "models/gemini-embedding-001"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -157,7 +157,7 @@ def build_knowledge_base(force_rebuild: bool = False) -> dict:
 # PILLAR 4 — Search + Generate
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def ask_chloris_rag(question: str, history: list = None, n_results: int = 3) -> dict:
+def ask_chloris_rag(question: str, history: list = None, n_results: int = 3, student_context: str = "") -> dict:
     from ai.prompts import (
         CHLORIS_SYSTEM_PERSONA,
         RAG_ANSWER_PROMPT,
@@ -200,14 +200,15 @@ def ask_chloris_rag(question: str, history: list = None, n_results: int = 3) -> 
                 relevant_docs.append(doc)
                 relevant_sources.append(meta.get("source", "DIU Handbook"))
 
-        if not relevant_docs:
+        # If no relevant docs found, we can still answer if we have student_context
+        if not relevant_docs and not student_context:
             return {
                 "answer":       NO_CONTEXT_RESPONSE,
                 "sources":      [],
                 "chunks_found": 0,
             }
 
-        context_text = "\n\n---\n\n".join(relevant_docs)
+        context_text = "\n\n---\n\n".join(relevant_docs) if relevant_docs else "No specific handbook section found for this query."
 
         # Step 3: Format History for the prompt
         history = history or []
@@ -218,6 +219,7 @@ def ask_chloris_rag(question: str, history: list = None, n_results: int = 3) -> 
             .replace("{system_persona}", CHLORIS_SYSTEM_PERSONA) \
             .replace("{chat_history}", history_text) \
             .replace("{context}", context_text) \
+            .replace("{student_context}", student_context or "No personal academic records available for this query.") \
             .replace("{question}", question)
 
         # Step 4: Generate answer

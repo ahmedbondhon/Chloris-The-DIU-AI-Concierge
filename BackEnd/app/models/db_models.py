@@ -11,10 +11,14 @@ class User(SQLModel, table=True):
     full_name:       str
     email:           str            = Field(unique=True, index=True)
     hashed_password: str
+    role:            str            = Field(default="student")
+    department:      Optional[str]  = None
     is_active:       bool           = Field(default=True)
     created_at:      datetime       = Field(default_factory=datetime.utcnow)
 
-    profile: Optional["StudentProfile"] = Relationship(back_populates="user")
+    profile:  Optional["StudentProfile"] = Relationship(back_populates="user")
+    bookings: List["Booking"]            = Relationship(back_populates="user")
+    tickets:  List["Ticket"]             = Relationship(back_populates="user")
 
 
 # ── Student Profile ───────────────────────────────────────────────────────────
@@ -28,6 +32,7 @@ class StudentProfile(SQLModel, table=True):
     department:        str
     batch:             str
     semester:          int
+    current_year:      int           = Field(default=1)
     cgpa:              float         = Field(default=0.0)
     credits_completed: int           = Field(default=0)
     credits_required:  int           = Field(default=136)
@@ -64,6 +69,9 @@ class Enrollment(SQLModel, table=True):
     semester:    str
     grade:       Optional[str]   = Field(default=None)
     grade_point: Optional[float] = Field(default=None)
+    quiz_mark:   float           = Field(default=0.0)
+    mid_mark:    float           = Field(default=0.0)
+    final_mark:  float           = Field(default=0.0)
     is_current:  bool            = Field(default=True)
 
     student: Optional["StudentProfile"] = Relationship(back_populates="enrollments")
@@ -133,3 +141,29 @@ class FeePayment(SQLModel, table=True):
     @property
     def balance(self) -> float:
         return round(self.amount_due - self.amount_paid, 2)
+
+
+# ── Booking ──────────────────────────────────────────────────────────────────
+class Booking(SQLModel, table=True):
+    __tablename__ = "booking"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="users.id")
+    resource_name: str
+    start_time: datetime
+    end_time: datetime
+    status: str = Field(default="pending")
+
+    user: Optional["User"] = Relationship(back_populates="bookings")
+
+
+# ── Ticket ───────────────────────────────────────────────────────────────────
+class Ticket(SQLModel, table=True):
+    __tablename__ = "ticket"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="users.id")
+    category: str
+    description: str
+    status: str = Field(default="open")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    user: Optional["User"] = Relationship(back_populates="tickets")

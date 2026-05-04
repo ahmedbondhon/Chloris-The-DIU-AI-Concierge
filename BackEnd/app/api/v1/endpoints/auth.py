@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from db.session import get_session # We assume this exists
 from core.security import create_access_token, verify_password, get_password_hash
 from core.config import settings
-from models.user import User
+from models.db_models import User
 from jose import jwt, JWTError
 
 router = APIRouter()
